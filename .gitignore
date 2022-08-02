@@ -1,0 +1,29 @@
+# Ant
+local.properties
+
+# Maven
+target/
+release.properties
+
+# Eclipse
+.classpath
+.project
+.externalToolBuilders/
+.metadata
+.settings
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+data/keyword1/
+
+# Mac
+.DS_Store
+
+.zip
+deploy/
+# gitignore
+#.gitignore
