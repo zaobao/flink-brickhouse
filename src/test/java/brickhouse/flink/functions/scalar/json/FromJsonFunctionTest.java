@@ -1,4 +1,4 @@
-package brickhouse.flink.functions.scalar;
+package brickhouse.flink.functions.scalar.json;
 
 import brickhouse.flink.functions.scalar.json.FromJsonFunction;
 import brickhouse.flink.functions.scalar.json.ToJsonFunction;
