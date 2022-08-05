@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.apache.flink.table.api.Expressions.$;
 
-public class FromJsonFuntionTest {
+public class FromJsonFunctionTest {
 
     @Test
     void testBigIntArray() {
