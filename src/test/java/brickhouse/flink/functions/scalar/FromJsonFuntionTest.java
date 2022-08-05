@@ -1,5 +1,6 @@
 package brickhouse.flink.functions.scalar;
 
+import brickhouse.flink.functions.scalar.json.FromJsonFunction;
 import brickhouse.flink.functions.scalar.json.ToJsonFunction;
 import org.apache.flink.shaded.guava30.com.google.common.collect.Lists;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.apache.flink.table.api.Expressions.$;
 
-public class ToJsonFunctionTest {
+public class FromJsonFuntionTest {
 
     @Test
     void testBigIntArray() {
@@ -35,8 +36,9 @@ public class ToJsonFunctionTest {
 
         tEnv.createTemporaryView("t", t);
         tEnv.createFunction("to_json", ToJsonFunction.class);
+        tEnv.createFunction("from_json", FromJsonFunction.class);
         tEnv.executeSql(
-                        "select id1, id2, to_json(id) as id_json, to_json(ARRAY[CAST(id1 AS BIGINT), CAST(id2 AS BIGINT)]) AS ids_json from t")
+                        "select from_json(to_json(ARRAY[CAST(id1 AS BIGINT), CAST(id2 AS BIGINT)]), ARRAY[CAST(1 AS BIGINT)]) AS ids from t")
                 .print();
     }
 
@@ -62,10 +64,10 @@ public class ToJsonFunctionTest {
 
         tEnv.createTemporaryView("t", t);
         tEnv.createFunction("to_json", ToJsonFunction.class);
+        tEnv.createFunction("from_json", FromJsonFunction.class);
 
         tEnv.executeSql(
-                        "select id1, id2, to_json(MAP['id1', id1, 'id2', id2]) AS id_map_json from t")
+                        "select from_json(to_json(MAP['id1', id1, 'id2', id2]), MAP['', 1]) AS id_map, from_json(to_json(MAP['id1', id1, 'id2', id2]), MAP['', 1])['id2'] AS id2_from_map from t")
                 .print();
     }
-
 }
