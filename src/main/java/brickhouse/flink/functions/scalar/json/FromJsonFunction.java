@@ -49,5 +49,4 @@ public class FromJsonFunction extends ScalarFunction {
                 }).build();
     }
 
-
 }
