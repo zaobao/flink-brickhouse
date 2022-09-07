@@ -33,11 +33,6 @@ public class FromJsonFunction extends ScalarFunction {
     }
 
     @Override
-    public void open(FunctionContext context) throws Exception {
-        super.open(context);
-    }
-
-    @Override
     public TypeInference getTypeInference(DataTypeFactory typeFactory) {
         return TypeInference.newBuilder()
                 .inputTypeStrategy(InputTypeStrategies.sequence(
