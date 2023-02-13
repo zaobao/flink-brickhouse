@@ -2,11 +2,16 @@ package brickhouse.flink.utils;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.flink.table.data.TimestampData;
 import org.apache.flink.types.Row;
 
+import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
@@ -17,7 +22,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 public class JSONUtils {
@@ -55,6 +61,27 @@ public class JSONUtils {
 
     public static <T> T fromJson(String json,  Type typeOfT) {
         return getGson().fromJson(json, typeOfT);
+    }
+
+    public static List<String> splitJsonArray(String json) {
+        if (StringUtils.isBlank(json)) {
+            return null;
+        }
+        List<String> result = new LinkedList<>();
+        Gson gson = getGson();
+        try (JsonReader jsonReader = new JsonReader(new StringReader(json))) {
+            if (jsonReader.peek() == JsonToken.NULL) {
+                return null;
+            }
+            jsonReader.beginArray();
+            while (jsonReader.hasNext()) {
+                result.add(gson.fromJson(jsonReader, JsonElement.class).toString());
+            }
+            jsonReader.endArray();
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String toJson(Object obj) {
