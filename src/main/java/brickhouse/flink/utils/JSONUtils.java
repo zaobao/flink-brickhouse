@@ -21,10 +21,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class JSONUtils {
 
@@ -78,6 +75,29 @@ public class JSONUtils {
                 result.add(gson.fromJson(jsonReader, JsonElement.class).toString());
             }
             jsonReader.endArray();
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Map<String, String> toJsonMap(String json) {
+        if (StringUtils.isBlank(json)) {
+            return null;
+        }
+        Map<String, String> result = new HashMap<>();
+        Gson gson = getGson();
+        try (JsonReader jsonReader = new JsonReader(new StringReader(json))) {
+            if (jsonReader.peek() == JsonToken.NULL) {
+                return null;
+            }
+            jsonReader.beginObject();
+            while (jsonReader.hasNext()) {
+                String key = jsonReader.nextName();
+                String value = gson.fromJson(jsonReader, JsonElement.class).toString();
+                result.put(key, value);
+            }
+            jsonReader.endObject();
             return result;
         } catch (IOException e) {
             throw new RuntimeException(e);
