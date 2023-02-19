@@ -1,5 +1,6 @@
 package brickhouse.flink.functions.scalar.collection;
 
+import brickhouse.flink.utils.ComparisonUtils;
 import org.apache.flink.table.annotation.DataTypeHint;
 import org.apache.flink.table.annotation.InputGroup;
 import org.apache.flink.table.functions.ScalarFunction;
@@ -14,13 +15,13 @@ public class ArrayContainsFunction extends ScalarFunction {
                                   @DataTypeHint(inputGroup = InputGroup.ANY) Object needle) {
         try {
             if (haystack == null) {
-                return null;
+                return false;
             }
             Class<?> setClass = haystack.getClass();
             if (setClass.isArray()) {
                 int length = Array.getLength(haystack);
                 for (int i = 0; i < length; i++) {
-                    if (isEqual(Array.get(haystack, i), needle)) {
+                    if (ComparisonUtils.equals(Array.get(haystack, i), needle)) {
                         return true;
                     }
                 }
@@ -29,22 +30,6 @@ public class ArrayContainsFunction extends ScalarFunction {
         } catch (Throwable t) {
             throw new FlinkRuntimeException(t);
         }
-    }
-
-    boolean isEqual(Object a, Object b) {
-        if (a == b) {
-            return true;
-        }
-        if (a == null || b == null) {
-            return false;
-        }
-        if (a instanceof Long && b instanceof Long) {
-            return ((Long) a).longValue() == ((Long) b).longValue();
-        }
-        if (a instanceof Number && b instanceof Number) {
-            return ((Number) a).doubleValue() == ((Number) b).doubleValue();
-        }
-        return b.equals(a);
     }
 
 }
