@@ -68,6 +68,27 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.0.0-M6</version>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<minimizeJar>true</minimizeJar>
+							<shadeTestJar>false</shadeTestJar>
+							<artifactSet>
+								<excludes>
+									<exclude>org.apache.flink:*</exclude>
+								</excludes>
+							</artifactSet>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
